@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- STYLE: Texas Hill Country campsite at dusk (limestone and cedar, string-light amber over a violet sky, Alfa Slab One with Work Sans, a funk-organ night) | WHY: Walt's own email to the Dix Ranch party MVP winners remembers the year the downed tents on top of Karst Hill all had fiberglass poles and the sturdy ones had aluminum, so the gift is pitching tents into the wind on Karst Hill and choosing the right poles | ALT: A Gryphus festival lineup poster, rejected because Gordon says lead with the friendship, not the festival -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Karst Hill MVP</title>
+<meta name="description" content="Pitch your tents on Karst Hill, for Walt.">
+<meta property="og:title" content="Karst Hill MVP, for Walt">
+<meta property="og:image" content="https://gordonusc.github.io/gift-zink/img/hero.jpg">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Work+Sans:wght@500;700&display=swap">
+<style>
+:root{--amber:#ffb347;--sky:#2a1f4a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1426;color:#fff;font:16px/1.45 "Work Sans",system-ui,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.stage{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:min(100vw,calc(100svh*9/16));overflow:hidden;background:#1a1426}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.8)}
+.top{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 16px);text-align:center;padding:0 16px;text-shadow:0 2px 14px #000c}
+.top small{font-weight:700;font-size:11px;letter-spacing:.28em;color:var(--amber)}
+.top h1{font:400 clamp(28px,9vw,40px)/1.05 "Alfa Slab One",Georgia,serif;margin:6px 0}
+.top p{margin:0 auto;max-width:31ch;font-size:15px}
+.tents{position:absolute;left:0;right:0;top:46%;display:flex;justify-content:center;gap:18px}
+.tent{width:84px;height:70px;position:relative}
+.tent svg{width:100%;height:100%;transition:transform .35s}
+.tent.down svg{transform:scaleY(.25) translateY(150px) rotate(8deg)}
+.tent .lbl{position:absolute;left:0;right:0;bottom:-20px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.08em;text-shadow:0 1px 6px #000}
+.picks{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 66px);display:flex;gap:12px;justify-content:center}
+.picks button{flex:1;max-width:170px;padding:14px 10px;border-radius:12px;border:2px solid #fff6;background:#1a1426d9;color:#fff;font:700 14px "Work Sans",sans-serif;cursor:pointer}
+.picks button.alu{border-color:var(--amber)}
+.say{position:absolute;left:16px;right:16px;top:64%;text-align:center;font-weight:700;font-size:16px;text-shadow:0 2px 10px #000;min-height:1.4em}
+.hint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 34px);text-align:center;font-size:12px;letter-spacing:.12em;font-weight:700;text-shadow:0 2px 8px #000}
+.end{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 60px);padding:18px;text-align:center;border-radius:14px;background:#1a1426ee;border:2px solid var(--amber);opacity:0;transition:opacity 1s;pointer-events:none}
+.end.on{opacity:1;pointer-events:auto}
+.medal{width:64px;height:64px;margin:0 auto 8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#ffb347 55%,#b86b10);display:grid;place-items:center;font:400 16px "Alfa Slab One",serif;color:#3a2206;box-shadow:0 0 30px #ffb34788}
+.end h2{font:400 22px "Alfa Slab One",serif;margin:0 0 6px;color:var(--amber)}
+.foot{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);text-align:center;font-size:11px;opacity:.7}
+canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <img class="bg" src="img/hero.jpg" alt="Tents and string lights on a limestone hilltop in the Texas Hill Country at dusk">
+  <canvas id="c"></canvas>
+  <div class="top"><small>FOR WALT</small><h1>Karst Hill MVP</h1><p>The wind is coming over Karst Hill. Pitch three tents that stay up. Pick your poles wisely.</p></div>
+  <div class="tents" id="tents"></div>
+  <div class="say" id="say"></div>
+  <div class="picks" id="picks"><button type="button" data-p="fiber">Fiberglass poles</button><button type="button" class="alu" data-p="alu">Aluminum poles</button></div>
+  <div class="hint" id="hint">TENT 1 OF 3</div>
+  <div class="end" id="end"><div class="medal">MVP</div><h2>Lifetime MVP</h2>Since you were both fifteen, through Karst Hill and every ranch party since. Gordon loves you, Walter Earl Zink.</div>
+  <div class="foot">made by Darby, Gordon's AI assistant, with love from Gordon</div>
+</div>
+<script>
+// ElevenLabs sound design: wind gust, fiberglass collapse, aluminum pitch, campfire cheer, organ funk bed. Code only mixes.
+let ac=null, master=null, bufs={}, bed=null;
+function audio(){ if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); master=ac.createGain(); master.gain.value=.9; master.connect(ac.destination); ['wind','collapse','pitch','cheer','bed'].forEach(load);}catch(e){} } if(ac&&ac.state==='suspended') ac.resume(); return ac; }
+async function load(n){ if(bufs[n]) return bufs[n]; try{ const r=await fetch('snd/'+n+'.mp3'); const a=await r.arrayBuffer(); bufs[n]=await new Promise((ok,no)=>ac.decodeAudioData(a,ok,no)); }catch(e){} return bufs[n]; }
+async function play(n,vol=1,loop=false){ if(!audio()) return null; const b=await load(n); if(!b) return null; const s=ac.createBufferSource(), g=ac.createGain(); s.buffer=b; s.loop=loop; g.gain.value=vol; s.connect(g).connect(master); s.start(); return {s,g}; }
+const COLORS=['#e8743b','#3fa7a0','#d9c35a'];
+const tents=document.getElementById('tents');
+const SVG=c=>`<svg viewBox="0 0 84 70" aria-hidden="true"><polygon points="42,4 80,66 4,66" fill="${c}" stroke="#2a1f14" stroke-width="3"/><polygon points="42,22 54,66 30,66" fill="#2a1f14" opacity=".55"/></svg>`;
+let up=0, busy=false, spots=[];
+for(let i=0;i<3;i++){ const t=document.createElement('div'); t.className='tent'; t.style.opacity=.25; t.innerHTML=SVG(COLORS[i])+'<div class="lbl"></div>'; tents.appendChild(t); spots.push(t); }
+const say=t=>document.getElementById('say').textContent=t;
+const c=document.getElementById('c'), x=c.getContext('2d'), D=Math.min(devicePixelRatio||1,2);
+function size(){ c.width=c.clientWidth*D; c.height=c.clientHeight*D; } size(); addEventListener('resize',size);
+let stars=[], gust=0;
+document.querySelectorAll('.picks button').forEach(b=>b.addEventListener('click',()=>{ if(busy||up>=3) return; busy=true; audio(); const t=spots[up]; t.style.opacity=1; t.classList.remove('down');
+  if(b.dataset.p==='fiber'){ t.querySelector('.lbl').textContent='fiberglass'; say('Here comes the wind...'); setTimeout(()=>{ play('wind',.8); gust=1; setTimeout(()=>{ play('collapse',.9); t.classList.add('down'); say('Down it goes. Elliott called it: fiberglass.'); busy=false; },700); },500); }
+  else { t.querySelector('.lbl').textContent='aluminum'; play('pitch',.9); say('Snapped taut. Here comes the wind...'); setTimeout(()=>{ play('wind',.6); gust=1; setTimeout(()=>{ up++; say(up<3?'Still standing. Aluminum holds.':'All three standing on Karst Hill.'); document.getElementById('hint').textContent=up<3?'TENT '+(up+1)+' OF 3':''; busy=false; if(up>=3) finish(); },900); },500); } }));
+function finish(){ play('cheer',.85); play('bed',.4,true).then(h=>bed=h); document.getElementById('picks').style.display='none'; for(let i=0;i<70;i++) stars.push({x:(i*53%100)/100,y:(i*37%40)/100,t:i*40});
+  setTimeout(()=>document.getElementById('end').classList.add('on'),1300); }
+window.__win=()=>{ up=3; spots.forEach(s=>s.style.opacity=1); finish(); };
+(function loop(now){ x.clearRect(0,0,c.width,c.height);
+  if(gust>0){ gust-=.02; for(let i=0;i<14;i++){ const y=(i/14)*c.height*.8+40*D, len=(60+i*7)*D, off=((now/2+i*90)%(c.width+len))-len; x.strokeStyle=`rgba(255,255,255,${.25*gust})`; x.lineWidth=2*D; x.beginPath(); x.moveTo(off,y); x.lineTo(off+len,y-6*D); x.stroke(); } }
+  stars.forEach(s=>{ const a=Math.min(1,(now-s.t)/800)*(0.6+0.4*Math.sin(now/400+s.t)); if(a<=0) return; x.globalAlpha=Math.max(a,0); x.fillStyle='#fff7d6'; x.beginPath(); x.arc(s.x*c.width,s.y*c.height,1.8*D,0,7); x.fill(); }); x.globalAlpha=1;
+  requestAnimationFrame(loop); })(0);
+</script>
+</body>
+</html>

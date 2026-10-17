@@ -1,0 +1,26 @@
+{
+ "img/hero.jpg": {
+  "tool": "higgsfield",
+  "prompt": "Texas Hill Country limestone hilltop campsite at dusk (job 19e47687) gpt_image_2_5"
+ },
+ "snd/wind.mp3": {
+  "tool": "elevenlabs",
+  "prompt": "hilltop wind gust (flow OSJ4UggWe4tBC6dmsdNx)"
+ },
+ "snd/collapse.mp3": {
+  "tool": "elevenlabs",
+  "prompt": "fiberglass pole snap and tent flop (flow OSJ4UggWe4tBC6dmsdNx)"
+ },
+ "snd/pitch.mp3": {
+  "tool": "elevenlabs",
+  "prompt": "aluminum poles click, tent taut, stakes (flow OSJ4UggWe4tBC6dmsdNx)"
+ },
+ "snd/cheer.mp3": {
+  "tool": "elevenlabs",
+  "prompt": "old friends cheering around a campfire (flow OSJ4UggWe4tBC6dmsdNx)"
+ },
+ "snd/bed.mp3": {
+  "tool": "elevenlabs",
+  "prompt": "Hammond organ funk trio loop, eleven_music_v2_5, 2s crossfade baked (flow OSJ4UggWe4tBC6dmsdNx)"
+ }
+}
